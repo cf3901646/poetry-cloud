@@ -1,0 +1,1531 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>诗云 SHIYUN｜等一首尚未诞生的诗</title>
+  <style>
+    :root {
+      --sy-bg: #111310;
+      --sy-surface: #171914;
+      --sy-surface-card: #1c1f19;
+      --sy-ink: #e2dfd1;
+      --sy-muted: #989b8b;
+      --sy-dim: #6c7262;
+      --sy-accent: #c5a47a;
+      --sy-accent-light: #e5cfb3;
+      --sy-line: #34372c;
+      --sy-line-light: #44493a;
+      --sy-seal: #a84232;
+      --font-serif: "Songti SC", "Noto Serif SC", "Source Han Serif SC", "SimSun", "STSong", serif;
+      --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", "Microsoft YaHei", sans-serif;
+      --font-mono: "JetBrains Mono", "Fira Code", SFMono-Regular, Consolas, monospace;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html, body {
+      background-color: var(--sy-bg);
+      color: var(--sy-ink);
+      font-family: var(--font-sans);
+      font-size: 14px;
+      line-height: 1.6;
+      overflow-x: hidden;
+      scroll-behavior: smooth;
+    }
+
+    ::selection {
+      background: var(--sy-accent);
+      color: var(--sy-bg);
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    /* 背景星云 Canvas */
+    #nebula-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    .sy-page {
+      position: relative;
+      z-index: 1;
+      max-width: 1380px;
+      margin: 0 auto;
+      padding: 0 4.5% 80px;
+    }
+
+    /* 顶部导航 */
+    .sy-nav {
+      height: 96px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--sy-line);
+      margin-bottom: 20px;
+    }
+
+    .sy-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 22px;
+      letter-spacing: 4px;
+      font-family: var(--font-serif);
+      color: var(--sy-ink);
+    }
+
+    .sy-brand-icon {
+      color: var(--sy-accent);
+      font-size: 28px;
+      line-height: 1;
+    }
+
+    .sy-brand small {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 3px;
+      color: var(--sy-accent);
+      margin-left: 4px;
+    }
+
+    .sy-clock-badge {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--sy-muted);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: rgba(23, 25, 20, 0.85);
+      padding: 8px 16px;
+      border: 1px solid var(--sy-line);
+      border-radius: 4px;
+    }
+
+    .sy-clock-badge i {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--sy-accent);
+      display: inline-block;
+      box-shadow: 0 0 8px var(--sy-accent);
+      animation: pulse-dot 2.5s infinite ease-in-out;
+    }
+
+    @keyframes pulse-dot {
+      0%, 100% { opacity: 0.3; transform: scale(0.9); }
+      50% { opacity: 1; transform: scale(1.2); }
+    }
+
+    .sy-clock-time {
+      color: var(--sy-accent);
+      font-weight: 500;
+    }
+
+    /* 卷首 Hero */
+    .sy-hero {
+      position: relative;
+      min-height: 520px;
+      display: grid;
+      grid-template-columns: 1.1fr 1fr;
+      padding: 60px 0 60px;
+      align-items: center;
+      gap: 32px;
+      border-bottom: 1px solid var(--sy-line);
+    }
+
+    .sy-eyebrow {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 2px;
+      color: var(--sy-accent);
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      margin-bottom: 24px;
+    }
+
+    .sy-eyebrow > span {
+      width: 24px;
+      height: 1px;
+      background: var(--sy-accent);
+    }
+
+    .sy-hero h1 {
+      font-family: var(--font-serif);
+      font-size: clamp(34px, 4.2vw, 58px);
+      font-weight: 400;
+      letter-spacing: 3px;
+      line-height: 1.45;
+      margin-bottom: 24px;
+      color: var(--sy-ink);
+    }
+
+    .sy-hero h1 span {
+      color: var(--sy-accent);
+    }
+
+    .sy-intro {
+      color: #b0b4a4;
+      font-size: 13.5px;
+      line-height: 2.2;
+      letter-spacing: 1.2px;
+      max-width: 560px;
+    }
+
+    .sy-hero-speed-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 28px;
+      padding: 10px 18px;
+      background: rgba(197, 164, 122, 0.08);
+      border: 1px solid rgba(197, 164, 122, 0.3);
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--sy-accent-light);
+      border-radius: 4px;
+    }
+
+    .sy-hero-universe-meta {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      padding: 32px;
+      background: rgba(23, 25, 20, 0.6);
+      border: 1px solid var(--sy-line);
+      backdrop-filter: blur(8px);
+      position: relative;
+    }
+
+    .sy-hero-universe-meta::before {
+      content: "00 / AXIOM";
+      font-family: var(--font-mono);
+      font-size: 9px;
+      letter-spacing: 2px;
+      color: var(--sy-muted);
+    }
+
+    .sy-meta-quote {
+      font-family: var(--font-serif);
+      font-size: 15px;
+      line-height: 2.1;
+      letter-spacing: 1.5px;
+      color: var(--sy-ink);
+    }
+
+    .sy-meta-footnote {
+      font-size: 11px;
+      color: var(--sy-dim);
+      font-family: var(--font-mono);
+      letter-spacing: 1px;
+      border-top: 1px dashed var(--sy-line);
+      padding-top: 12px;
+    }
+
+    /* 各板块头部 */
+    .sy-section {
+      padding: 68px 0;
+      border-bottom: 1px solid var(--sy-line);
+    }
+
+    .sy-section-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-bottom: 32px;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+
+    .sy-section-head h2 {
+      font-family: var(--font-serif);
+      font-size: 28px;
+      font-weight: 400;
+      letter-spacing: 2px;
+      line-height: 1.5;
+      margin-top: 8px;
+      color: var(--sy-ink);
+    }
+
+    .sy-section-status {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--sy-muted);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .sy-section-status b {
+      color: var(--sy-accent);
+      font-weight: normal;
+    }
+
+    /* 01 此刻实时诗稿 */
+    .sy-console {
+      border: 1px solid var(--sy-line);
+      display: grid;
+      grid-template-columns: 1.5fr 1fr;
+      background: var(--sy-surface);
+      box-shadow: 0 16px 48px rgba(0, 0, 0, 0.4);
+    }
+
+    .sy-live {
+      padding: 32px 36px 24px;
+      display: flex;
+      flex-direction: column;
+      min-height: 420px;
+      background-image: linear-gradient(#22251b44 1px, transparent 1px), linear-gradient(90deg, #22251b44 1px, transparent 1px);
+      background-size: 32px 32px;
+      position: relative;
+    }
+
+    .sy-panel-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: var(--sy-muted);
+      font-size: 11px;
+      font-family: var(--font-mono);
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--sy-line);
+    }
+
+    .sy-manuscript {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 36px 0;
+      gap: 16px;
+    }
+
+    .sy-line {
+      display: flex;
+      gap: 16px;
+      font-family: var(--font-serif);
+      font-size: clamp(24px, 2.6vw, 34px);
+      letter-spacing: 6px;
+      line-height: 1.8;
+      color: var(--sy-ink);
+      text-shadow: 0 0 16px rgba(226, 223, 209, 0.15);
+    }
+
+    .sy-char {
+      display: inline-block;
+      transition: all 0.1s ease;
+    }
+
+    .sy-char.prefix {
+      color: #8c9082;
+    }
+
+    .sy-char.flowing {
+      color: var(--sy-accent);
+      text-shadow: 0 0 14px rgba(197, 164, 122, 0.6);
+    }
+
+    .sy-live-bottom {
+      border-top: 1px solid var(--sy-line);
+      padding-top: 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      font-size: 11px;
+      color: var(--sy-muted);
+    }
+
+    .sy-btn-save {
+      background: none;
+      border: 1px solid var(--sy-line);
+      color: var(--sy-accent);
+      padding: 6px 14px;
+      font-size: 11px;
+      cursor: pointer;
+      font-family: var(--font-serif);
+      letter-spacing: 1px;
+      transition: all 0.2s;
+    }
+
+    .sy-btn-save:hover {
+      background: rgba(197, 164, 122, 0.1);
+      border-color: var(--sy-accent);
+    }
+
+    /* 右侧仪表盘 */
+    .sy-instruments {
+      border-left: 1px solid var(--sy-line);
+      padding: 32px 32px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      background: var(--sy-surface-card);
+    }
+
+    .sy-instrument {
+      margin-bottom: 20px;
+    }
+
+    .sy-instrument p {
+      font-size: 11px;
+      color: var(--sy-muted);
+      margin-bottom: 6px;
+      display: flex;
+      justify-content: space-between;
+      font-family: var(--font-mono);
+    }
+
+    .sy-instrument strong {
+      display: block;
+      font-family: var(--font-mono);
+      font-size: 26px;
+      font-weight: 400;
+      color: var(--sy-accent);
+      letter-spacing: 1px;
+    }
+
+    .sy-instrument strong small {
+      font-size: 12px;
+      color: var(--sy-muted);
+      margin-left: 4px;
+    }
+
+    .sy-instrument span {
+      display: block;
+      font-size: 11px;
+      color: var(--sy-dim);
+      margin-top: 4px;
+    }
+
+    .sy-small-metrics {
+      border-top: 1px solid var(--sy-line);
+      padding-top: 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .sy-small-metrics div {
+      display: flex;
+      justify-content: space-between;
+      font-size: 11px;
+      color: var(--sy-muted);
+      font-family: var(--font-mono);
+    }
+
+    .sy-small-metrics b {
+      color: var(--sy-ink);
+      font-weight: 500;
+    }
+
+    /* 02 千古名篇排队罗盘 */
+    .sy-poem-tabs {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding-bottom: 12px;
+      margin-bottom: 24px;
+    }
+
+    .sy-poem-tab {
+      background: var(--sy-surface);
+      border: 1px solid var(--sy-line);
+      color: var(--sy-muted);
+      padding: 10px 18px;
+      cursor: pointer;
+      font-family: var(--font-serif);
+      font-size: 13px;
+      letter-spacing: 1.5px;
+      white-space: nowrap;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .sy-poem-tab:hover {
+      border-color: var(--sy-accent);
+      color: var(--sy-ink);
+    }
+
+    .sy-poem-tab.is-active {
+      background: rgba(197, 164, 122, 0.12);
+      border-color: var(--sy-accent);
+      color: var(--sy-accent);
+    }
+
+    .sy-destination {
+      border: 1px solid var(--sy-line);
+      display: grid;
+      grid-template-columns: 1fr 1.4fr;
+      background: var(--sy-surface);
+    }
+
+    .sy-poem-view {
+      padding: 40px;
+      border-right: 1px solid var(--sy-line);
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .sy-poem-label {
+      font-size: 11px;
+      font-family: var(--font-mono);
+      color: var(--sy-dim);
+      letter-spacing: 2px;
+      margin-bottom: 8px;
+    }
+
+    .sy-poem-view h3 {
+      font-family: var(--font-serif);
+      font-size: 26px;
+      font-weight: 400;
+      letter-spacing: 4px;
+      color: var(--sy-accent);
+      margin-bottom: 6px;
+    }
+
+    .sy-poem-author {
+      font-size: 12px;
+      color: var(--sy-muted);
+      margin-bottom: 24px;
+      font-family: var(--font-serif);
+    }
+
+    .sy-poem-lines {
+      font-family: var(--font-serif);
+      font-size: 18px;
+      letter-spacing: 4px;
+      line-height: 2.2;
+      color: var(--sy-ink);
+    }
+
+    .sy-seal {
+      position: absolute;
+      bottom: 32px;
+      right: 32px;
+      width: 44px;
+      height: 44px;
+      border: 2px solid var(--sy-seal);
+      color: var(--sy-seal);
+      font-family: var(--font-serif);
+      font-size: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 4px;
+      opacity: 0.85;
+      user-select: none;
+    }
+
+    /* 等待时间测算看板 */
+    .sy-estimate {
+      padding: 40px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      background: var(--sy-surface-card);
+    }
+
+    .sy-estimate-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 11px;
+      color: var(--sy-muted);
+      font-family: var(--font-mono);
+    }
+
+    .sy-order-badge {
+      padding: 2px 8px;
+      border: 1px solid var(--sy-line);
+      border-radius: 2px;
+      color: var(--sy-accent);
+    }
+
+    .sy-big-number {
+      margin: 20px 0 10px;
+      font-family: var(--font-mono);
+      font-size: clamp(32px, 3.8vw, 52px);
+      color: var(--sy-accent);
+      font-weight: 300;
+      letter-spacing: 1px;
+      display: flex;
+      align-items: baseline;
+      gap: 10px;
+    }
+
+    .sy-big-number span {
+      font-size: 18px;
+      color: var(--sy-muted);
+      font-family: var(--font-serif);
+    }
+
+    .sy-number-caption {
+      font-size: 12px;
+      color: var(--sy-muted);
+      font-style: italic;
+      margin-bottom: 24px;
+    }
+
+    /* 时间长河标尺 */
+    .sy-ruler {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      margin-bottom: 8px;
+      position: relative;
+    }
+
+    .sy-ruler span {
+      flex: 1;
+      height: 1px;
+      background: var(--sy-line-light);
+    }
+
+    .sy-ruler i {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--sy-accent);
+      position: absolute;
+      left: 78%;
+      top: -2.5px;
+      box-shadow: 0 0 8px var(--sy-accent);
+    }
+
+    .sy-ruler-labels {
+      display: flex;
+      justify-content: space-between;
+      font-family: var(--font-mono);
+      font-size: 9px;
+      color: var(--sy-dim);
+      margin-bottom: 24px;
+    }
+
+    .sy-estimate-note {
+      font-size: 11.5px;
+      color: var(--sy-muted);
+      line-height: 1.9;
+      border-top: 1px solid var(--sy-line);
+      padding-top: 16px;
+    }
+
+    /* 03 自定义五绝测算器 */
+    .sy-custom-box {
+      border: 1px solid var(--sy-line);
+      padding: 36px;
+      background: var(--sy-surface);
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .sy-custom-input-group {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .sy-custom-input {
+      flex: 1;
+      min-width: 280px;
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid var(--sy-line);
+      padding: 14px 18px;
+      color: var(--sy-ink);
+      font-family: var(--font-serif);
+      font-size: 16px;
+      letter-spacing: 3px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .sy-custom-input:focus {
+      border-color: var(--sy-accent);
+    }
+
+    .sy-custom-btn {
+      background: var(--sy-surface-card);
+      border: 1px solid var(--sy-accent);
+      color: var(--sy-accent);
+      padding: 14px 28px;
+      font-family: var(--font-serif);
+      font-size: 14px;
+      letter-spacing: 2px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .sy-custom-btn:hover {
+      background: var(--sy-accent);
+      color: var(--sy-bg);
+    }
+
+    .sy-custom-result {
+      display: none;
+      background: var(--sy-surface-card);
+      border: 1px solid rgba(197, 164, 122, 0.3);
+      padding: 24px 28px;
+      animation: fadeIn 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* 04 思想实验问答 */
+    .sy-about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.6fr;
+      gap: 40px;
+    }
+
+    .sy-about-title {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .sy-about-title h3 {
+      font-family: var(--font-serif);
+      font-size: 24px;
+      font-weight: 400;
+      letter-spacing: 2px;
+      line-height: 1.6;
+      color: var(--sy-ink);
+    }
+
+    .sy-formula-box {
+      margin-top: 16px;
+      padding: 20px;
+      border: 1px solid var(--sy-line);
+      background: var(--sy-surface);
+      font-family: var(--font-mono);
+      font-size: 11px;
+    }
+
+    .sy-formula-box b {
+      display: block;
+      font-size: 15px;
+      color: var(--sy-accent);
+      margin: 8px 0;
+    }
+
+    .sy-explanations {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    details.sy-qa {
+      background: var(--sy-surface);
+      border: 1px solid var(--sy-line);
+      padding: 18px 24px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    details.sy-qa summary {
+      font-family: var(--font-serif);
+      font-size: 15px;
+      letter-spacing: 1px;
+      color: var(--sy-ink);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      list-style: none;
+    }
+
+    details.sy-qa summary::-webkit-details-marker {
+      display: none;
+    }
+
+    details.sy-qa p {
+      font-size: 12.5px;
+      color: #a4a899;
+      line-height: 2.1;
+      margin-top: 14px;
+      border-top: 1px solid var(--sy-line);
+      padding-top: 14px;
+    }
+
+    /* 结语与页脚 */
+    .sy-closing {
+      text-align: center;
+      padding: 72px 0 40px;
+      font-family: var(--font-serif);
+    }
+
+    .sy-closing-quote {
+      font-size: 22px;
+      letter-spacing: 4px;
+      line-height: 2;
+      color: var(--sy-ink);
+      margin-bottom: 12px;
+    }
+
+    .sy-closing small {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 3px;
+      color: var(--sy-dim);
+    }
+
+    .sy-footer {
+      border-top: 1px solid var(--sy-line);
+      padding-top: 28px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: var(--sy-dim);
+      font-size: 11px;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    @media (max-width: 900px) {
+      .sy-hero, .sy-console, .sy-destination, .sy-about-grid {
+        grid-template-columns: 1fr;
+      }
+      .sy-instruments, .sy-poem-view {
+        border-left: none;
+        border-right: none;
+        border-top: 1px solid var(--sy-line);
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- 宇宙星云背景 -->
+  <canvas id="nebula-canvas"></canvas>
+
+  <div class="sy-page">
+    <!-- 顶部导航栏 -->
+    <header class="sy-nav">
+      <div class="sy-brand">
+        <span class="sy-brand-icon">✳</span>
+        <span>诗云</span>
+        <small>SHIYUN</small>
+      </div>
+
+      <div class="sy-clock-badge">
+        <i aria-hidden="true"></i>
+        <span>今日子夜 00:00:00 至今 · </span>
+        <span class="sy-clock-time" id="clock-display">00:00:00.000</span>
+      </div>
+    </header>
+
+    <!-- 卷首 Hero -->
+    <section class="sy-hero">
+      <div>
+        <p class="sy-eyebrow"><span></span> A POETIC EXPERIMENT IN INFINITY</p>
+        <h1>让时间，<br>慢慢写成<span>一首诗。</span></h1>
+        <p class="sy-intro">
+          把两万零九百九十二个汉字排成顺序，把等待交给宇宙。<br>
+          从今日子夜零点开始，以固定五微秒（每秒二十万首）的极速，<br>
+          沿着每一种可能，步步向前，终将走到李白的月光。
+        </p>
+        <div class="sy-hero-speed-pill">
+          <span>固定极速运行中</span>
+          <span>·</span>
+          <span>5 µs / 每首 (200,000 首/秒)</span>
+        </div>
+      </div>
+
+      <div class="sy-hero-universe-meta">
+        <p class="sy-meta-quote">
+          “没有灵感。只有数学上的确定性顺序，<br>
+          和足够漫长、终将超越星辰寿命的时间。”
+        </p>
+        <p class="sy-meta-footnote">
+          Unicode CJK 基本字库（U+4E00 至 U+9FFF，共 20,992 字）<br>
+          五绝空间 20,992²⁰ ≈ 1.71 × 10⁸⁶ 种可能
+        </p>
+      </div>
+    </section>
+
+    <!-- 01 此刻实时诗稿 -->
+    <section class="sy-section" id="present">
+      <div class="sy-section-head">
+        <div>
+          <p class="sy-eyebrow"><span></span> 01 / THE PRESENT</p>
+          <h2>此刻，诗正在发生。</h2>
+        </div>
+        <div class="sy-section-status">
+          <span>以物理时间精确推算</span>
+          <span>·</span>
+          <b>正在走过第 <span id="current-ordinal-head">-</span> 首</b>
+        </div>
+      </div>
+
+      <div class="sy-console">
+        <!-- 左侧实时诗笺 -->
+        <div class="sy-live">
+          <div class="sy-panel-top">
+            <span>实时诗稿 · LIVE MANUSCRIPT</span>
+            <span>五言绝句 · 20 字 / 每首</span>
+          </div>
+
+          <div class="sy-manuscript">
+            <div class="sy-line" id="line-0">
+              <span class="sy-char prefix">一</span>
+              <span class="sy-char prefix">一</span>
+              <span class="sy-char prefix">一</span>
+              <span class="sy-char prefix">一</span>
+              <span class="sy-char prefix">一</span>
+            </div>
+            <div class="sy-line" id="line-1">
+              <span class="sy-char prefix">一</span>
+              <span class="sy-char prefix">一</span>
+              <span class="sy-char prefix">一</span>
+              <span class="sy-char prefix">一</span>
+              <span class="sy-char prefix">一</span>
+            </div>
+            <div class="sy-line" id="line-2">
+              <span class="sy-char prefix">一</span>
+              <span class="sy-char prefix">一</span>
+              <span class="sy-char prefix">一</span>
+              <span class="sy-char prefix">一</span>
+              <span class="sy-char prefix">一</span>
+            </div>
+            <div class="sy-line" id="line-3">
+              <span class="sy-char prefix">一</span>
+              <span class="sy-char flowing">一</span>
+              <span class="sy-char flowing">一</span>
+              <span class="sy-char flowing">一</span>
+              <span class="sy-char flowing">一</span>
+            </div>
+          </div>
+
+          <div class="sy-live-bottom">
+            <span>自今日 0 点累计已走过 <strong id="current-ordinal-full" style="color:var(--sy-accent); font-family:var(--font-mono); font-weight:normal;">0</strong> 种排列 · 步步不重复</span>
+            <button class="sy-btn-save" id="btn-save-moment">留住这一瞬 ↗</button>
+          </div>
+        </div>
+
+        <!-- 右侧人文度量衡仪表盘 -->
+        <div class="sy-instruments">
+          <div>
+            <div class="sy-instrument">
+              <p>写诗基准速率 <span>POEMS / SEC</span></p>
+              <strong>200,000<small> 首 / 秒</small></strong>
+              <span>锁定物理理论极限 5 微秒 (5 µs / 首)</span>
+            </div>
+
+            <div class="sy-instrument">
+              <p>今日已流逝时间 <span>ELAPSED TODAY</span></p>
+              <strong id="elapsed-time-val">00:00:00<small> 秒</small></strong>
+              <span>从今日 00:00:00 累积时间差推进</span>
+            </div>
+          </div>
+
+          <div class="sy-small-metrics">
+            <div>
+              <span>单首生成理论耗时</span>
+              <b>5.0 µs</b>
+            </div>
+            <div>
+              <span>状态空间穷举进度</span>
+              <b id="progress-percent">0.000...%</b>
+            </div>
+            <div>
+              <span>全宇宙总可能数</span>
+              <b>1.71 × 10⁸⁶ 首</b>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 02 千古绝唱重逢罗盘 -->
+    <section class="sy-section" id="distance">
+      <div class="sy-section-head">
+        <div>
+          <p class="sy-eyebrow"><span></span> 02 / THE DISTANCE</p>
+          <h2>重逢一首诗，需要多久？</h2>
+        </div>
+        <div class="sy-section-status">
+          <span>它们在漫长的序列中静默以候</span>
+        </div>
+      </div>
+
+      <!-- 名诗切换标签栏 -->
+      <div class="sy-poem-tabs" id="poem-tabs-container">
+        <!-- 动态生成 8 首名诗按钮 -->
+      </div>
+
+      <!-- 选中名诗的测算展板 -->
+      <div class="sy-destination">
+        <div class="sy-poem-view">
+          <span class="sy-poem-label">等待的坐标 / 五言绝句 · 首字为「一」先行者</span>
+          <h3 id="view-poem-title">山村咏怀</h3>
+          <p class="sy-poem-author" id="view-poem-author">宋 · 邵雍</p>
+          <div class="sy-poem-lines" id="view-poem-verses">
+            <p>一去二三里，烟村四五家。</p>
+            <p>亭台六七座，八九十枝花。</p>
+          </div>
+          <div class="sy-seal" id="view-poem-seal">一</div>
+        </div>
+
+        <div class="sy-estimate">
+          <div class="sy-estimate-top">
+            <span>距离这首诗 · 预计还需等待</span>
+            <span class="sy-order-badge">UNICODE ↑ 升序遍历</span>
+          </div>
+
+          <div class="sy-big-number">
+            <strong id="view-wait-years">1.46 × 10⁶⁸</strong>
+            <span>年</span>
+          </div>
+
+          <p class="sy-number-caption" id="view-epoch-caption">
+            首字为「一」（Unicode 0x4e00，偏移 0），位列宇宙最前沿，比李白提早六万倍时间重逢。
+          </p>
+
+          <div class="sy-ruler">
+            <span></span><span></span><span></span><span></span><span></span>
+            <i></i>
+          </div>
+          <div class="sy-ruler-labels">
+            <span>一 年</span>
+            <span>万 年</span>
+            <span>亿 年</span>
+            <span>难以想象的远方 ↗</span>
+          </div>
+
+          <div class="sy-estimate-note">
+            等效约 <strong id="view-univ-ages" style="color:var(--sy-accent); font-weight:normal;">1.06 × 10⁵⁸</strong> 个宇宙寿命周期（现存宇宙约 138 亿年）。<br>
+            所处时期：<span id="view-epoch-tag" style="color:var(--sy-accent-light)">恒星级黑洞蒸发纪元</span>。<br>
+            诗云绝对序号：<code id="view-poem-ordinal" style="color:#a0a495; word-break:break-all;">-</code>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 03 自定义五绝测算器 -->
+    <section class="sy-section">
+      <div class="sy-section-head">
+        <div>
+          <p class="sy-eyebrow"><span></span> 03 / CUSTOM HORIZON</p>
+          <h2>测算你的五言诗</h2>
+        </div>
+        <div class="sy-section-status">
+          <span>输入 20 字，算出它在宇宙深处的归期</span>
+        </div>
+      </div>
+
+      <div class="sy-custom-box">
+        <div class="sy-custom-input-group">
+          <input type="text" id="custom-input" class="sy-custom-input" placeholder="输入 20 字五言绝句（如：若在宇宙尽头相见便请为我读一首李白的诗）" maxlength="20">
+          <button class="sy-custom-btn" id="btn-custom-calc">测算到达所需年数</button>
+        </div>
+
+        <div class="sy-custom-result" id="custom-result-panel">
+          <p style="font-family:var(--font-serif); font-size:16px; color:var(--sy-accent); margin-bottom:12px;" id="custom-res-quote">——</p>
+          <div style="font-family:var(--font-mono); font-size:12px; color:var(--sy-muted); line-height:2;">
+            <div>预计到达所需年数：<strong id="custom-res-years" style="color:var(--sy-accent); font-size:18px;">-</strong></div>
+            <div>等效宇宙现存历史（138亿年）：<span id="custom-res-univ" style="color:var(--sy-ink);">-</span></div>
+            <div>所处天体物理演化纪元：<span id="custom-res-epoch" style="color:var(--sy-accent-light);">-</span></div>
+            <div style="margin-top:6px; font-size:11px; color:var(--sy-dim);">绝对大数坐标：<span id="custom-res-id">-</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 04 思想实验解读 -->
+    <section class="sy-section" style="border-bottom:none;">
+      <div class="sy-about-grid">
+        <div class="sy-about-title">
+          <p class="sy-eyebrow"><span></span> 04 / THE THOUGHT EXPERIMENT</p>
+          <h3>每一首诗，都有一个坐标。<br><em style="color:var(--sy-accent); font-style:normal;">但诗意，需要你来认出。</em></h3>
+          <p style="color:var(--sy-muted); font-size:13px; line-height:2;">
+            致敬刘慈欣《诗云》与博尔赫斯《巴别塔图书馆》。<br>
+            这是一件关于时间、秩序与人类精神的数字存在性证明。
+          </p>
+
+          <div class="sy-formula-box">
+            <span>预计剩余时间（年）</span>
+            <b>( K − C ) / r / 31,557,600</b>
+            <span style="color:var(--sy-dim);">K = 目标序号　C = 当前已走过序号　r = 200,000 首/秒</span>
+          </div>
+        </div>
+
+        <div class="sy-explanations">
+          <details class="sy-qa" open>
+            <summary>
+              <span>01 按顺序走，真的会走到李白吗？</span>
+              <span>+</span>
+            </summary>
+            <p>
+              会。在有限字库与固定 20 字长度下，所有排列组合构成一个封闭有限序列。只要持续遍历、不跳过也不重复，每一首由这 20,992 个汉字组成的诗，都会在确定的一步出现。从全「一」开始，最后一个字先递增，满位后向左进位，如同钟表的里程指针。
+            </p>
+          </details>
+
+          <details class="sy-qa">
+            <summary>
+              <span>02 为什么前半段总是长久重复的「一」？</span>
+              <span>+</span>
+            </summary>
+            <p>
+              这是真实数学规律带来的敬畏感：在走完末尾的全部字词组合之前，开头的字句不会轻易被惊动。这种长久的沉寂不是停滞，而是宇宙尺度的常态——在浩瀚的乱码荒原上，秩序的诞生需要难以估量的时间冲刷。
+            </p>
+          </details>
+
+          <details class="sy-qa">
+            <summary>
+              <span>03 写出李白，就等于超越李白吗？</span>
+              <span>+</span>
+            </summary>
+            <p>
+              正如《诗云》小说中神级文明李白的喟叹：程序能穷举出每一组字，却写不出“诗歌鉴赏算法”。超越李白的绝唱必定在后方的某一个坐标上，但认出它的美、为它落泪，依然是人类意识无可替代的特权。
+            </p>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <!-- 结语与落款 -->
+    <div class="sy-closing">
+      <p class="sy-closing-quote">“宇宙不着急。<br>我们也是。”</p>
+      <small>LET THE UNWRITTEN TAKE ITS TIME.</small>
+    </div>
+
+    <!-- 底部版权 -->
+    <footer class="sy-footer">
+      <div>
+        <span style="color:var(--sy-accent);">✳ 诗云</span>
+        <span style="margin: 0 8px;">·</span>
+        <span>一个有限的人，发起了一场无限的等待。</span>
+      </div>
+      <div>基于 Base-20992 Unicode 离散映射与物理时钟测算</div>
+    </footer>
+  </div>
+
+  <script>
+    (function () {
+      'use strict';
+
+      // 1. 核心数学常量
+      const ALPHABET_START = 0x4e00; // '一'
+      const ALPHABET_SIZE = 20992n;  // Unicode CJK 基本汉字 (0x4e00 至 0x9fff)
+      const POEM_LENGTH = 20;        // 严格 20 字五言绝句
+      const SECONDS_PER_YEAR = 31557600; // 365.25 * 86400 秒
+      const UNIVERSE_AGE_YEARS = 1.38e10; // 宇宙现存年龄 138 亿年
+
+      // 锁定极速：5 微秒 / 首 (200,000 首/秒)
+      const FIXED_RESOLUTION_US = 5;
+      const FIXED_RATE = 200000; // 1e6 / 5 = 200,000 首/秒
+
+      // 2. 九首千古名篇库（以首字为「一」的《山村咏怀》领衔）
+      const FAMOUS_POEMS = [
+        {
+          id: "shancun",
+          title: "山村咏怀",
+          author: "邵雍",
+          dynasty: "宋",
+          verses: ["一去二三里", "烟村四五家", "亭台六七座", "八九十枝花"],
+          text: "一去二三里烟村四五家亭台六七座八九十枝花",
+          seal: "一"
+        },
+        {
+          id: "jingyesi",
+          title: "静夜思",
+          author: "李白",
+          dynasty: "唐",
+          verses: ["床前明月光", "疑是地上霜", "举头望明月", "低头思故乡"],
+          text: "床前明月光疑是地上霜举头望明月低头思故乡",
+          seal: "月"
+        },
+        {
+          id: "chunxiao",
+          title: "春晓",
+          author: "孟浩然",
+          dynasty: "唐",
+          verses: ["春眠不觉晓", "处处闻啼鸟", "夜来风雨声", "花落知多少"],
+          text: "春眠不觉晓处处闻啼鸟夜来风雨声花落知多少",
+          seal: "春"
+        },
+        {
+          id: "dengguanquelou",
+          title: "登鹳雀楼",
+          author: "王之涣",
+          dynasty: "唐",
+          verses: ["白日依山尽", "黄河入海流", "欲穷千里目", "更上一层楼"],
+          text: "白日依山尽黄河入海流欲穷千里目更上一层楼",
+          seal: "楼"
+        },
+        {
+          id: "jiangxue",
+          title: "江雪",
+          author: "柳宗元",
+          dynasty: "唐",
+          verses: ["千山鸟飞绝", "万径人踪灭", "孤舟蓑笠翁", "独钓寒江雪"],
+          text: "千山鸟飞绝万径人踪灭孤舟蓑笠翁独钓寒江雪",
+          seal: "雪"
+        },
+        {
+          id: "luzhai",
+          title: "鹿柴",
+          author: "王维",
+          dynasty: "唐",
+          verses: ["空山不见人", "但闻人语响", "返景入深林", "复照青苔上"],
+          text: "空山不见人但闻人语响返景入深林复照青苔上",
+          seal: "空"
+        },
+        {
+          id: "xunyin",
+          title: "寻隐者不遇",
+          author: "贾岛",
+          dynasty: "唐",
+          verses: ["松下问童子", "言师采药去", "只在此山中", "云深不知处"],
+          text: "松下问童子言师采药去只在此山中云深不知处",
+          seal: "云"
+        },
+        {
+          id: "xiangsi",
+          title: "相思",
+          author: "王维",
+          dynasty: "唐",
+          verses: ["红豆生南国", "春来发几枝", "愿君多采撷", "此物最相思"],
+          text: "红豆生南国春来发几枝愿君多采撷此物最相思",
+          seal: "相"
+        },
+        {
+          id: "leyouyuan",
+          title: "乐游原",
+          author: "李商隐",
+          dynasty: "唐",
+          verses: ["向晚意不适", "驱车登古原", "夕阳无限好", "只是近黄昏"],
+          text: "向晚意不适驱车登古原夕阳无限好只是近黄昏",
+          seal: "夕"
+        }
+      ];
+
+      // 3. 编码与逆向解码
+      function poemToOrdinal(text) {
+        let idx = 0n;
+        for (const ch of text) {
+          let cp = ch.codePointAt(0);
+          if (cp < ALPHABET_START || cp >= ALPHABET_START + Number(ALPHABET_SIZE)) {
+            cp = ALPHABET_START + (cp % Number(ALPHABET_SIZE));
+          }
+          const d = BigInt(cp - ALPHABET_START);
+          idx = idx * ALPHABET_SIZE + d;
+        }
+        return idx;
+      }
+
+      function ordinalToPoem(ordinal, len = POEM_LENGTH) {
+        let curr = BigInt(ordinal);
+        const chars = [];
+        for (let i = 0; i < len; i++) {
+          const rem = Number(curr % ALPHABET_SIZE);
+          curr = curr / ALPHABET_SIZE;
+          chars.unshift(String.fromCodePoint(ALPHABET_START + rem));
+        }
+        return chars.join('');
+      }
+
+      // 4. 天体物理演化纪元描述
+      function getCosmicEpoch(logYears) {
+        if (logYears < 2) return "人类寿命纪元";
+        if (logYears < 5) return "人类文明纪元";
+        if (logYears < 10) return "太阳系主序星纪元";
+        if (logYears < 14) return "退化恒星纪元";
+        if (logYears < 40) return "质子衰变纪元";
+        if (logYears < 67) return "恒星级黑洞蒸发纪元";
+        if (logYears < 100) return "超大质量黑洞蒸发纪元";
+        return "终极热寂冷纪元";
+      }
+
+      // 5. 对数域等待年数计算
+      function calculateWaitYears(targetOrdinal, currentOrdinal, rate) {
+        const diff = targetOrdinal > currentOrdinal ? targetOrdinal - currentOrdinal : 0n;
+        if (diff === 0n) {
+          return { years: "已达成", univAges: "0", epoch: "当下时刻" };
+        }
+        const str = diff.toString();
+        const head = str.slice(0, 15);
+        const logSteps = Math.log10(Number(head)) + str.length - head.length;
+        const logYears = logSteps - Math.log10(rate) - Math.log10(SECONDS_PER_YEAR);
+        const exp = Math.floor(logYears);
+        const coeff = (10 ** (logYears - exp)).toFixed(2);
+
+        const logUniv = logYears - Math.log10(UNIVERSE_AGE_YEARS);
+        const expUniv = Math.floor(logUniv);
+        const coeffUniv = (10 ** (logUniv - expUniv)).toFixed(2);
+
+        return {
+          years: `${coeff} × 10^{${exp}}`,
+          univAges: `${coeffUniv} × 10^{${expUniv}}`,
+          epoch: getCosmicEpoch(logYears)
+        };
+      }
+
+      // 6. DOM 元素缓存
+      const dom = {
+        clockDisplay: document.getElementById('clock-display'),
+        currentOrdinalHead: document.getElementById('current-ordinal-head'),
+        currentOrdinalFull: document.getElementById('current-ordinal-full'),
+        elapsedTimeVal: document.getElementById('elapsed-time-val'),
+        lines: [
+          document.getElementById('line-0'),
+          document.getElementById('line-1'),
+          document.getElementById('line-2'),
+          document.getElementById('line-3')
+        ],
+        btnSaveMoment: document.getElementById('btn-save-moment'),
+        poemTabsContainer: document.getElementById('poem-tabs-container'),
+        viewPoemTitle: document.getElementById('view-poem-title'),
+        viewPoemAuthor: document.getElementById('view-poem-author'),
+        viewPoemVerses: document.getElementById('view-poem-verses'),
+        viewPoemSeal: document.getElementById('view-poem-seal'),
+        viewWaitYears: document.getElementById('view-wait-years'),
+        viewEpochCaption: document.getElementById('view-epoch-caption'),
+        viewUnivAges: document.getElementById('view-univ-ages'),
+        viewEpochTag: document.getElementById('view-epoch-tag'),
+        viewPoemOrdinal: document.getElementById('view-poem-ordinal'),
+        customInput: document.getElementById('custom-input'),
+        btnCustomCalc: document.getElementById('btn-custom-calc'),
+        customResultPanel: document.getElementById('custom-result-panel'),
+        customResQuote: document.getElementById('custom-res-quote'),
+        customResYears: document.getElementById('custom-res-years'),
+        customResUniv: document.getElementById('custom-res-univ'),
+        customResEpoch: document.getElementById('custom-res-epoch'),
+        customResId: document.getElementById('custom-res-id')
+      };
+
+      let activePoemIndex = 0; // 默认展示李白《静夜思》
+      let currentSampleText = "一一一一一一一一一一一一一一一一一一一一";
+      let currentSampleOrdinal = 0n;
+
+      // 7. 渲染名诗标签栏
+      function initPoemTabs() {
+        dom.poemTabsContainer.innerHTML = '';
+        FAMOUS_POEMS.forEach((item, index) => {
+          const tab = document.createElement('button');
+          tab.className = `sy-poem-tab ${index === activePoemIndex ? 'is-active' : ''}`;
+          tab.innerHTML = `<span>0${index + 1}</span> <b>${item.title}</b> <small style="color:var(--sy-dim); font-size:11px;">${item.author}</small>`;
+          tab.addEventListener('click', () => {
+            activePoemIndex = index;
+            updatePoemTabs();
+            updatePoemDisplay();
+          });
+          dom.poemTabsContainer.appendChild(tab);
+        });
+      }
+
+      function updatePoemTabs() {
+        const tabs = dom.poemTabsContainer.querySelectorAll('.sy-poem-tab');
+        tabs.forEach((tab, index) => {
+          if (index === activePoemIndex) tab.classList.add('is-active');
+          else tab.classList.remove('is-active');
+        });
+      }
+
+      function updatePoemDisplay() {
+        const poem = FAMOUS_POEMS[activePoemIndex];
+        dom.viewPoemTitle.textContent = poem.title;
+        dom.viewPoemAuthor.textContent = `${poem.dynasty || '唐'} · ${poem.author}`;
+        dom.viewPoemVerses.innerHTML = `
+          <p>${poem.verses[0]}，${poem.verses[1]}。</p>
+          <p>${poem.verses[2]}，${poem.verses[3]}。</p>
+        `;
+        dom.viewPoemSeal.textContent = poem.seal;
+
+        const targetOrd = poemToOrdinal(poem.text);
+        const wait = calculateWaitYears(targetOrd, currentSampleOrdinal, FIXED_RATE);
+
+        dom.viewWaitYears.textContent = wait.years;
+        dom.viewUnivAges.textContent = wait.univAges;
+        dom.viewEpochTag.textContent = wait.epoch;
+        dom.viewEpochCaption.textContent = poem.id === 'shancun'
+          ? `首字为「一」（Unicode 0x4e00，偏移 0），位列宇宙最前沿，比李白提早六万倍时间重逢。`
+          : `在第 ${wait.years} 年（${wait.epoch}），程序将精准拼出这首千古名篇。`;
+        dom.viewPoemOrdinal.textContent = `# ${targetOrd.toString().slice(0, 16)}... (共 ${targetOrd.toString().length} 位大数)`;
+      }
+
+      // 8. 实时主循环 (严格锚定本地浏览器子夜零点)
+      function tick() {
+        const now = new Date();
+        const midnight = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0, 0);
+
+        // 格式化本地时钟
+        const hh = String(now.getHours()).padStart(2, '0');
+        const mm = String(now.getMinutes()).padStart(2, '0');
+        const ss = String(now.getSeconds()).padStart(2, '0');
+        const ms = String(now.getMilliseconds()).padStart(3, '0');
+        dom.clockDisplay.textContent = `${hh}:${mm}:${ss}.${ms}`;
+
+        // 今日已过秒数
+        const elapsedSec = (now.getTime() - midnight.getTime()) / 1000;
+        const elapsedH = Math.floor(elapsedSec / 3600);
+        const elapsedM = Math.floor((elapsedSec % 3600) / 60);
+        const elapsedS = Math.floor(elapsedSec % 60);
+        dom.elapsedTimeVal.innerHTML = `${String(elapsedH).padStart(2,'0')}:${String(elapsedM).padStart(2,'0')}:${String(elapsedS).padStart(2,'0')}<small> 秒 (${elapsedSec.toFixed(1)}s)</small>`;
+
+        // 从今日0点起生成的绝对大数序号 (200,000 首/秒)
+        currentSampleOrdinal = BigInt(Math.floor(elapsedSec * FIXED_RATE));
+        dom.currentOrdinalFull.textContent = currentSampleOrdinal.toLocaleString();
+        dom.currentOrdinalHead.textContent = currentSampleOrdinal.toLocaleString();
+
+        // 还原出当前 20 字
+        currentSampleText = ordinalToPoem(currentSampleOrdinal, POEM_LENGTH);
+        for (let l = 0; l < 4; l++) {
+          const lineEl = dom.lines[l];
+          const spans = lineEl.querySelectorAll('.sy-char');
+          const sliceText = currentSampleText.slice(l * 5, (l + 1) * 5);
+          for (let c = 0; c < 5; c++) {
+            if (spans[c]) {
+              spans[c].textContent = sliceText[c] || '一';
+            }
+          }
+        }
+
+        requestAnimationFrame(tick);
+      }
+
+      // 9. “留住这一瞬” 下载诗稿
+      dom.btnSaveMoment.addEventListener('click', () => {
+        const timestamp = new Date();
+        const lines = [
+          currentSampleText.slice(0, 5),
+          currentSampleText.slice(5, 10),
+          currentSampleText.slice(10, 15),
+          currentSampleText.slice(15, 20)
+        ];
+        const content = [
+          "诗云 · 有序宇宙中的一瞬",
+          timestamp.toLocaleString("zh-CN"),
+          "",
+          ...lines,
+          "",
+          `Unicode 升序遍历中的第 ${currentSampleOrdinal.toLocaleString()} 首`,
+          `基准速率：5 微秒 / 首 (200,000 首/秒)`,
+          "这些文字由物理时间决定，未经挑选，也未必有意义。但它曾在这 5 微秒里真实存在过。",
+        ].join("\n");
+
+        const blob = new Blob([content], { type: "text/plain;charset=utf-8" });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = `诗云-${timestamp.getTime()}.txt`;
+        link.click();
+        setTimeout(() => URL.revokeObjectURL(url), 1000);
+      });
+
+      // 10. 自定义五绝测算
+      dom.btnCustomCalc.addEventListener('click', () => {
+        let raw = dom.customInput.value.trim().replace(/[，。！？、\s]/g, '');
+        if (!raw) {
+          alert('请输入文字进行测算');
+          return;
+        }
+        if (raw.length < POEM_LENGTH) {
+          raw = raw.padEnd(POEM_LENGTH, '之');
+        } else if (raw.length > POEM_LENGTH) {
+          raw = raw.slice(0, POEM_LENGTH);
+        }
+
+        const targetOrd = poemToOrdinal(raw);
+        const wait = calculateWaitYears(targetOrd, currentSampleOrdinal, FIXED_RATE);
+
+        dom.customResQuote.textContent = `${raw.slice(0, 5)}，${raw.slice(5, 10)}。${raw.slice(10, 15)}，${raw.slice(15, 20)}。`;
+        dom.customResYears.textContent = `${wait.years} 年`;
+        dom.customResUniv.textContent = `${wait.univAges} 个宇宙年龄`;
+        dom.customResEpoch.textContent = wait.epoch;
+        dom.customResId.textContent = `# ${targetOrd.toString().slice(0, 14)}... (共 ${targetOrd.toString().length} 位)`;
+        dom.customResultPanel.style.display = 'block';
+      });
+
+      // 11. 柔和古朴的汉字微尘星云背景
+      const canvas = document.getElementById('nebula-canvas');
+      const ctx = canvas.getContext('2d');
+      let width = window.innerWidth;
+      let height = window.innerHeight;
+      let particles = [];
+
+      function initCanvas() {
+        width = canvas.width = window.innerWidth;
+        height = canvas.height = window.innerHeight;
+        particles = [];
+        const glyphs = "月山川云海夜星河梦花落风烟雨天地人间归舟";
+        const count = 720;
+        for (let i = 0; i < count; i++) {
+          const angle = i * 2.399963;
+          const radius = Math.sqrt((i + 0.5) / count) * Math.max(width, height) * 0.45;
+          const jitter = (Math.sin(i * 127.1 + 311.7) * 43758.5453) % 1;
+          particles.push({
+            angle,
+            radius,
+            jitter: Math.abs(jitter),
+            glyph: glyphs[i % glyphs.length],
+            size: 0.8 + Math.abs(jitter) * 1.6
+          });
+        }
+      }
+
+      window.addEventListener('resize', initCanvas);
+      initCanvas();
+
+      let starTime = 0;
+      function drawStars() {
+        starTime += 0.0008;
+        ctx.fillStyle = 'rgba(17, 19, 16, 0.28)';
+        ctx.fillRect(0, 0, width, height);
+
+        const cx = width * 0.5;
+        const cy = height * 0.48;
+
+        ctx.save();
+        ctx.translate(cx, cy);
+        ctx.rotate(-0.25);
+
+        for (const p of particles) {
+          const currentAngle = p.angle + starTime * (1.2 - p.radius / Math.max(width, height));
+          const x = Math.cos(currentAngle) * p.radius;
+          const y = Math.sin(currentAngle) * p.radius * (0.52 + p.jitter * 0.15);
+
+          if (p.jitter > 0.45) {
+            ctx.font = `${7 + p.jitter * 5}px "Songti SC", SimSun, serif`;
+            ctx.fillStyle = p.jitter > 0.8 ? "rgba(229, 207, 179, 0.35)" : "rgba(197, 164, 122, 0.22)";
+            ctx.fillText(p.glyph, x, y);
+          } else {
+            ctx.fillStyle = "rgba(197, 164, 122, 0.35)";
+            ctx.fillRect(x, y, p.size, p.size);
+          }
+        }
+
+        ctx.restore();
+        requestAnimationFrame(drawStars);
+      }
+
+      // 初始化名诗并启动
+      initPoemTabs();
+      updatePoemDisplay();
+      requestAnimationFrame(drawStars);
+      requestAnimationFrame(tick);
+    })();
+  </script>
+</body>
+</html>
